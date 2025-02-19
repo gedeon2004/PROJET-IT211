@@ -1,0 +1,111 @@
+/* Style général */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    padding: 0;
+}
+
+/* Pied de page */
+.footer {
+    background-color: #343a40;
+    color: white;
+    animation: fadeInTop 1s ease-out;
+    position: relative;
+}
+
+.footer-description {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: slideFromTop 1s ease-out forwards 0.2s;
+}
+
+.social-icons a {
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+    color: #fd7e14; /* Use orange color on hover */
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+/* Animation to make footer appear from the top */
+@keyframes fadeInTop {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animation for text coming from top */
+@keyframes slideFromTop {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Buttons */
+.btn-primary, .btn-warning, .btn-danger {
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover, .btn-warning:hover, .btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Table */
+.table-hover tbody tr:hover {
+    background-color: #e9f7fd;
+}
+
+.table-responsive {
+    margin-top: 1rem;
+}
+
+.table img {
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+}
+
+/* Sélecteur de catégories */
+.form-select {
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-select:focus {
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
+
+.logo {
+    width: 100px;
+   
+    margin-right: 20px;
+    transition: transform 0.3s;
+}
+
+.logo:hover {
+    transform: rotate(5deg);
+}

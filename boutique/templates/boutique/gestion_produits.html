@@ -1,0 +1,173 @@
+{% extends 'boutique/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Gestion des Produits</h2>
+    
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary mb-4">Retour au Dashboard</a>
+    <a href="{% url 'ajouter_produit' %}" class="btn btn-success mb-4">Ajouter un Produit</a>
+    
+    <!-- Filtre par catégorie -->
+    <div class="filter-categories mb-4">
+        <select class="form-control" id="categoryFilter">
+            <option value="all">Toutes les catégories</option>
+            {% for categorie in categories %}
+            <option value="{{ categorie.id }}">{{ categorie.nom }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Prix</th>
+                <th>Stock</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produit in produits %}
+            <tr data-category="{{ produit.categorie.id }}">
+                <td><img src="{{ produit.image.url }}" alt="{{ produit.nom }}" width="50"></td>
+                <td>{{ produit.nom }}</td>
+                <td>{{ produit.prix }} FCFA</td>
+                <td>{{ produit.stock }}</td>
+                <td>
+                    <a href="{% url 'modifier_produit' produit.id %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-pencil-alt"></i> Modifier
+                    </a>
+                    <form method="POST" action="{% url 'supprimer_produit' produit.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center">Aucun produit trouvé</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Style personnalisé -->
+<style>
+/* Style personnalisé pour la page de gestion des produits */
+.container {
+    background-color: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+h2 {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Boutons */
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Table */
+.table {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.table th, .table td {
+    padding: 15px;
+    text-align: center;
+}
+
+.table th {
+    background-color: #343a40;
+    color: #ffffff;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+img {
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+img:hover {
+    transform: scale(1.1);
+}
+
+/* Catégories filter */
+.filter-categories {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+.filter-categories select {
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    transition: border-color 0.3s;
+}
+
+.filter-categories select:hover {
+    border-color: #007bff;
+}
+</style>
+
+<!-- Script JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.0/gsap.min.js"></script>
+<script>
+// GSAP animation for table row hover and product image zoom effect
+gsap.from(".table tbody tr", {
+    opacity: 0,
+    y: 20,
+    stagger: 0.1,
+    duration: 0.5,
+    ease: "easeOut",
+});
+
+// GSAP hover effect on product images
+gsap.from("img", {
+    scale: 0.8,
+    duration: 0.5,
+    ease: "easeOut",
+    scrollTrigger: {
+        trigger: "img",
+        start: "top bottom",
+        end: "top top",
+        scrub: true,
+    },
+});
+
+// Filter products by category
+document.querySelector("#categoryFilter").addEventListener("change", function() {
+    let category = this.value;
+    let rows = document.querySelectorAll(".table tbody tr");
+
+    rows.forEach(row => {
+        let rowCategory = row.getAttribute("data-category");
+        if (category === "all" || rowCategory === category) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+});
+</script>
+
+{% endblock %}

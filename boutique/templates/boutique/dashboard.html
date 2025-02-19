@@ -1,0 +1,433 @@
+
+
+{% block content %}
+
+    {% load static %}
+    <!DOCTYPE html>
+    <html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../styles/vendor.css">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/uicons/2.0.11/css/uicons-regular-rounded.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@iconscout/unicons@4.0.8/css/line.min.css">
+        <title>Tableau de Bord des Vendeurs</title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            
+            body {
+                display: flex;
+                font-family: 'Arial', sans-serif;
+                background-color: #f4f4f4;
+                margin: 0;
+            }
+            
+            .sidebar {
+                width: 250px;
+                background-color: #FF8C00;
+                color: white;
+                padding: 20px;
+                transition: width 0.3s;
+            }
+            
+            .sidebar:hover {
+                width: 300px;
+            }
+            
+            .sidebar h2 {
+                text-align: center;
+            }
+            
+            .sidebar ul {
+                list-style-type: none;
+                padding: 0;
+            }
+            
+            .sidebar ul li {
+                margin: 15px 0;
+            }
+            
+            
+            
+            
+            
+            
+            
+            /* Cacher le sous-menu par défaut */
+            .product-item .add-none {
+                display: none;
+                margin-left: 20px;
+                background-color: #f9f9f9;
+                padding: 5px 0;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                position: absolute;
+                z-index: 10;
+            }
+            
+            /* Afficher le sous-menu lorsqu'on survole */
+            .product-item:hover .add-none {
+                display: block;
+            }
+            
+            /* Style du lien dans le sous-menu */
+            .product-item .add-none a {
+                font-size: 14px;
+                color: #ff6600;
+                text-decoration: none;
+                padding: 5px 10px;
+                display: block;
+                transition: background-color 0.3s ease;
+            }
+            
+            /* Effet hover pour le sous-menu */
+            .product-item .add-none a:hover {
+                background-color: #ff6600;
+                color: white;
+                border-radius: 5px;
+            }
+            
+            /* Style pour l'icône flèche */
+            .product-item .dropdown-arrow {
+                font-size: 12px;
+                color: #333;
+                margin-left: 5px;
+                transition: transform 0.3s ease;
+            }
+            
+            /* Flèche vers le haut lorsque le sous-menu est visible */
+            .product-item:hover .dropdown-arrow {
+                transform: rotate(-180deg);
+            }
+            
+            
+            /* .sidebar .add-none {
+                display: none;
+            }
+            
+            .add-none:hover{
+                display: block !important;
+            } */
+            
+            .sidebar ul li a {
+                color: white;
+                text-decoration: none;
+                padding: 10px;
+                border-radius: 5px;
+                display: block;
+                transition: background 0.3s;
+            }
+            
+            .sidebar ul li a:hover {
+                background-color: #FFD700;
+            }
+            
+            .main-content {
+                flex-grow: 1;
+                padding: 20px;
+            }
+            
+            .header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+            
+            .logo {
+                width: 100px;
+                margin-right: 20px;
+                transition: transform 0.3s;
+            }
+            
+            .logo:hover {
+                transform: rotate(5deg);
+            }
+            
+            
+            
+            .circle {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                background-color: #FF4500;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0 auto;
+                font-size: 20px;
+                transition: transform 0.3s;
+            }
+            
+            .circle:hover {
+                transform: scale(1.1);
+            }
+            
+            .overview {
+                margin-top: 20px;
+                background-color: white;
+                padding: 20px;
+                border-radius: 15px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            }
+            
+            
+            
+            
+            
+            /* Overlay */
+            .confirm-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            }
+            
+            /* Boîte de confirmation */
+            .confirm-box {
+                background: #fff;
+                border-radius: 8px;
+                padding: 20px;
+                text-align: center;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                width: 300px;
+            }
+            
+            /* Boutons */
+            .confirm-buttons button {
+                background-color: orange;
+                border: none;
+                border-radius: 4px;
+                padding: 10px 15px;
+                margin: 5px;
+                cursor: pointer;
+                font-size: 16px;
+                color: #fff;
+            }
+            
+            .confirm-buttons button:hover {
+                opacity: 0.8;
+            }
+            
+            
+            footer {
+                background-color: #f8f9fa; /* Couleur de fond */
+                text-align: center; /* Centre le texte */
+                padding: 10px 20px; /* Ajoute de l'espace interne */
+                position: fixed; /* Position fixe pour rester en bas */
+                bottom: 0; /* Colle le footer au bas */
+                left: 0;
+                width: 100%; /* Largeur totale */
+                border-top: 2px solid #ffa500; /* Ajoute une bordure en haut */
+                z-index: 1000; /* S'assure qu'il reste visible par-dessus d'autres éléments */
+              }
+              .footer-container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 0 15px;
+              }
+              
+              .footer-info {
+                font-size: 14px;
+                color: #555; /* Texte gris foncé */
+                margin-bottom: 10px;
+              }
+              
+              .footer-links a {
+                text-decoration: none;
+                color: #ff5722; /* Couleur principale (orange) */
+                font-weight: bold;
+                margin: 0 5px;
+              }
+              
+              .footer-links a:hover {
+                color: #e64a19; /* Couleur plus foncée au survol */
+              }
+              
+              .footer-links span {
+                color: #aaa; /* Séparateurs gris clair */
+              }  
+        </style>
+    </head>
+    <body>
+        <div class="d-flex">
+            <div class="sidebar">
+                
+                <h2 class="uil uil-list-ui-alt">Menu</h2>
+                
+                <ul>
+                     
+                    <li><a href="#" class="uil uil-home"> Tableau de Bord</a></li>
+                    <li><a href="#" class="uil uil-shopping-cart"> Ventes</a></li>
+                    <li class="product-item">
+                        <a href="#" class="uil uil-box"> Produits</a>
+                        <div class="add-none">
+                            <a href="{% url 'gestion_produits' %}" class="uil-plus-circle"> Ajouter Produit</a>
+                            <a href="{% url 'gestion_produits' %}" class="uil uil-trash-alt"> Supprimer Produit</a>
+                            <a href="{% url 'liste_produits' %}" class="uil uil-list-ul"> Voir Tous Mes Produits</a>
+                            <a href="#" class="uil uil-trash"> Corbeille</a>
+                        </div>
+                    </li>
+        
+                    <!-- Commandes section -->
+                    <li class="commande-item">
+                        <a href="#" class="uil uil-list-ul">
+                            Commandes
+                        </a>
+                    </li>
+        
+                    <li><a href="#" class="uil uil-truck"> Livraisons</a></li>
+                    <li><a href="#" class="uil uil-bill"> Paiements</a></li>
+                    <li><a href="#" class="uil uil-bell"> Notifications</a></li>
+                    <li><a href="#" class="uil uil-envelope"> Mail</a></li>
+                    <li><a href="{% url 'hisprofile' %}" class="uil uil-user"> Profil</a></li>
+                    <li><a href="{% url 'login' %}" id="logout-link" class="uil uil-sign-out-alt"> Déconnexion</a></li>
+                </ul>
+            </div>
+        </div>
+        
+    
+        
+    
+    
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.1.0/typed.umd.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/scrollReveal.js/4.0.9/scrollreveal.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
+        <script src="../script.js/vendor.js"></script>
+        <script>
+            // Mise à jour automatique de l'année dans le footer
+            document.addEventListener("DOMContentLoaded", () => {
+            const yearElement = document.createElement("span");
+            const footerInfo = document.querySelector(".footer-info");
+    
+            const currentYear = new Date().getFullYear();
+            yearElement.textContent = ` ${currentYear}`;
+            footerInfo.appendChild(yearElement);
+            });
+    
+            // Animation sur les liens du footer
+            const footerLinks = document.querySelectorAll(".footer-links a");
+    
+            footerLinks.forEach(link => {
+            link.addEventListener("mouseover", () => {
+                link.style.transform = "scale(1.1)";
+                link.style.transition = "transform 0.2s ease-in-out";
+            });
+    
+            link.addEventListener("mouseout", () => {
+                link.style.transform = "scale(1)";
+            });
+            });
+    
+            // Scroll vers le haut au clic sur le lien "Contactez-nous" (Exemple)
+            document.querySelector(".footer-links a:last-child").addEventListener("click", e => {
+            e.preventDefault(); // Empêcher l'action par défaut
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+            });
+    
+        </script>
+    
+            <div class="container py-5">
+               
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                    {% for produit in produits %}
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-light rounded">
+                            <!-- Image du produit - occupe presque toute la carte -->
+                            <img src="{{ produit.image.url }}" class="card-img-top" alt="{{ produit.nom }}" style="object-fit: cover; height: 250px;">
+                            
+                            <div class="card-body d-flex flex-column">
+                                <!-- Titre du produit -->
+                                <h5 class="card-title">{{ produit.nom }}</h5>
+                                
+                                <!-- Description du produit -->
+                                <p class="card-text">{{ produit.description|truncatewords:10 }}</p>
+                                
+                                <!-- Détails supplémentaires -->
+                                <div class="mt-auto">
+                                    <p class="card-text"><strong>Catégorie:</strong> {{ produit.categorie }}</p>
+                                    <p class="card-text"><strong>Prix:</strong> {{ produit.prix }} FCFA</p>
+                                    <p class="card-text"><strong>Stock:</strong> {{ produit.quantite_en_stock }}</p>
+                                </div>
+                            </div>
+                            <div class="card-footer text-center">
+                                <a href="{% url 'produit_detail' produit_id=produit.id %}" class="btn btn-primary btn-sm">Voir Détails</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12 text-center">
+                        <p>Aucun produit ajouté.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- CSS pour ajuster la mise en page -->
+            <style>
+                .card {
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                    display: flex;
+                    flex-direction: column;
+                }
+            
+                .card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+                }
+            
+                .card-img-top {
+                    object-fit: cover;
+                    height: 250px;  /* L'image prend une grande partie de la carte */
+                }
+            
+                .card-body {
+                    padding: 15px;
+                }
+            
+                .card-title {
+                    font-size: 1.25rem;
+                    font-weight: bold;
+                    color: #333;
+                }
+            
+                .card-text {
+                    color: #555;
+                }
+            
+                .card-footer {
+                    background-color: #f8f9fa;
+                    border-top: 1px solid #ddd;
+                }
+            
+                .btn-primary {
+                    background-color: #ff7f00;
+                    border-color: #ff7f00;
+                }
+            
+                .btn-primary:hover {
+                    background-color: #e67500;
+                    border-color: #e67500;
+                }
+            </style>
+        </div>
+        
+    </body>
+    
+{% endblock %}
