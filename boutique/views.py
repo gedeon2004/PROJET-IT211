@@ -211,14 +211,14 @@ def client_order_view(request, commande_id):
 
 #Voir les détails d'un produit sur le l'interface d'un vendeur
 def produit_detail(request, produit_id):
-    produit = get_object_or_404(Produit, id=produit_id)  # Utiliser produit_id ici
+    produit = get_object_or_404(Produit, id=produit_id)  
     return render(request, 'boutique/produit_detail.html', {'produit': produit})
 
 
 
 #Voir les détails d'un produit sur le l'interface d'un client
 def produit_detail_clients(request, produit_id):
-    produit = get_object_or_404(Produit, id=produit_id)  # Utiliser produit_id ici
+    produit = get_object_or_404(Produit, id=produit_id)
     return render(request, 'boutique/voir_detail.html', {'produit': produit})
 
 
