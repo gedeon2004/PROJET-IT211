@@ -6,7 +6,16 @@
     
     <a href="{% url 'dashboard' %}" class="btn btn-secondary mb-4">Retour au Dashboard</a>
     <a href="{% url 'ajouter_produit' %}" class="btn btn-success mb-4">Ajouter un Produit</a>
-    
+    {% if messages %}
+        <div class="alert alert-info">
+            {# Afficher un message flash s'il y a un message #}
+            
+                {% for message in messages %}
+                    <p> {{ message }} </p>
+                {% endfor %}
+            
+        </div>
+    {% endif %}
     <!-- Filtre par catégorie -->
     <div class="filter-categories mb-4">
         <select class="form-control" id="categoryFilter">
@@ -16,6 +25,8 @@
             {% endfor %}
         </select>
     </div>
+
+    
 
     <table class="table table-striped">
         <thead>

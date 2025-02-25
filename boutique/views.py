@@ -39,11 +39,10 @@ def ajouter_produit(request):
         print("Formulaire soumis !")
         if form.is_valid():
             form.save()
-            print("Formulaire validé, produit ajouté !")
+            #print("Formulaire validé, produit ajouté !")
+            messages.success(request, 'Le produit a été ajouté avec succès.')
             return redirect('gestion_produits')
-        else:
-            print("Formulaire invalide : ", form.errors)
-            messages.error(request, 'Il y a une erreur dans le formulaire, veuillez vérifier les champs.')
+        
     else:
         form = ProduitForm()
     return render(request, 'boutique/ajouter_produit.html', {'form': form})
@@ -119,7 +118,7 @@ def modifier_produit(request, produit_id):
 
 # Supprimer un produit
 @login_required
-def supprimer_produit(request, id):  # Assure-toi que "id" est bien ici
+def supprimer_produit(request, id):  
     produit = get_object_or_404(Produit, id=id)
     produit.delete()
     return redirect ('gestion_produits' )  
